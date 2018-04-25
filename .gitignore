@@ -3,3 +3,8 @@
 ################################################################################
 
 /packages
+/WebApiSchool/bin
+/WebApiSchool/obj/Debug
+/WebApplication/bin
+/WebApplication/obj/Debug
+/.vs/WebApiSchool/v15

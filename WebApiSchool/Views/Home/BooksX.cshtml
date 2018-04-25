@@ -1,0 +1,101 @@
+﻿<div id="tableBlock"></div>
+
+<button onclick="SendDictionary()">Send dictionary</button>
+
+<button onclick="PostDictionary()">POST dictionary</button>
+
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            GetAllBooks();
+
+        });
+        // Получение всех книг по ajax-запросу
+        function GetAllBooks() {
+
+            $.ajax({
+                url: '/api/values',
+                type: 'GET',
+                dataType: "text",
+                accepts: {
+                    text: "application/x-books"
+                },
+                success: function (data) {
+
+                    WriteResponse(data);
+                }
+            });
+        };
+        // вывод полученных данных на экран
+        function WriteResponse(data) {
+            var strResult = "<table><th>ID</th><th>Название</th><th>Год Издания</th>";
+            var arr = data.split(",");
+            for (var i = 0; i < arr.length; i += 3) {
+                strResult += "<tr><td>" + arr[i] + "</td><td> " + arr[i + 1] + "</td><td>"
+                    + arr[i + 2] + "</td></tr>";
+            }
+            strResult += "</table>";
+            console.log(strResult);
+            $("#tableBlock").html(strResult);
+        }
+
+
+        // POST DICTIONARY in the body
+        function PostDictionary() {
+            var data = {};
+                
+            data["id12345667889"] = {
+                name: "Война и мир",
+                author: "Толстой"
+            };
+                
+            data["id12345667467"] = {
+                name: "Отцы и дети",
+                author: "Тургенев"
+            };
+
+            
+
+            $.ajax({
+                url: '/api/values/setbooks',
+                type: 'POST',
+                contentType: "application/json;charset=utf-8",
+                data: JSON.stringify(data),
+                success: function (data) {
+                    alert("Данные отправлены");
+                }
+            });
+        }
+
+
+        // send dictionary as Query string - using GET http method
+        function SendDictionary() {
+
+            $.ajax({
+                url: '/api/values/setbooks',
+                type: 'GET',
+                data: {
+                    books: [{
+                        key: "id12345667889", value: {
+                            name: "Война и мир",
+                            author: "Толстой"
+                        }
+                    }, {
+                        key: "id12345667467", value: {
+                            name: "Отцы и дети",
+                            author: "Тургенев"
+                        }
+                    }]
+                },
+                success: function (data) {
+
+                    alert("Данные отправлены");
+                }
+            });
+        }
+    </script>
+}
