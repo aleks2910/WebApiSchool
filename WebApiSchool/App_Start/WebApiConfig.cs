@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Routing;
 using System.Web.Http.Routing.Constraints;
+using WebApiSchool.Filters;
 using WebApiSchool.Utils;
 
 namespace WebApiSchool {
@@ -14,6 +15,11 @@ namespace WebApiSchool {
 			// Web API routes
 			config.MapHttpAttributeRoutes();
 
+			// config.Filters.Add( new CustomAuthenticationAttribute() );
+
+			config.Filters.Add( new CustomActionAttribute() );
+			
+
 
 			//add route to use actions directly
 			config.Routes.MapHttpRoute(
@@ -21,7 +27,9 @@ namespace WebApiSchool {
 				routeTemplate: "api/{controller}/{action}",
 				defaults: new { },
 				constraints: new {
-					action = new AlphaRouteConstraint()
+					action = new AlphaRouteConstraint(),
+					// will be ignored 
+					myConstraint = new CustomConstraint( "/api/values/get" ) 
 				}
 			);
 

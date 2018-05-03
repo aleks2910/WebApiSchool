@@ -8,3 +8,7 @@
 /WebApplication/bin
 /WebApplication/obj/Debug
 /.vs/WebApiSchool/v15
+/ConsoleClient/bin/Debug
+/ConsoleClient/obj/Debug
+/TokenAuthorization/bin
+/TokenAuthorization/obj/Debug

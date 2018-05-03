@@ -8,6 +8,8 @@ using System.Web.Http.Results;
 using WebApiSchool.Models;
 
 namespace WebApiSchool.Controllers {
+
+	[Authorize]
 	public class EmptyController : ApiController {
 		public string Get( int id ) {
 			string requestInfo = "Контроллер: " + ControllerContext.ControllerDescriptor.ControllerName;

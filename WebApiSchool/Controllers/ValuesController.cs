@@ -1,10 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
+using WebApiSchool.Filters;
 using WebApiSchool.Models;
 
 namespace WebApiSchool.Controllers {
+
+	//[RoutePrefix("api")]
+	// Use ~  to cancel prefix! - i.e. http://localhost:6392/lol/twit/2
+	//[Route( "~/lol/twit/{id:int}" )]
+	//public string Twit( int id ) {
+	//	return id.ToString();
+	//}
 	public class ValuesController : ApiController {
 		BookContext db = new BookContext();
 
@@ -12,9 +23,47 @@ namespace WebApiSchool.Controllers {
 			return db.Books;
 		}
 
+		// disable Authorization filter
+		[OverrideAuthorization]
 		public Book GetBook( int id ) {
 			Book book = db.Books.Find( id );
 			return book;
+		}
+
+		[Route( "api/values/getArray/{id}" )]
+		[ArrayExceptionAttribute]
+		public string GetArray( int id ) {
+			string[] letters = new string[] { "aab", "aba", "baa" };
+			return letters[id];
+		}
+
+		[Route( "api/values/getArray2/{id}" )]
+		[CustomException( ExceptionType = typeof( IndexOutOfRangeException ),
+		StatusCode = HttpStatusCode.BadRequest, Message = "Элемент вне диапазона" )]
+		public string GetArray2( int id ) {
+			string[] letters = new string[] { "aab", "aba", "baa" };
+			return letters[id];
+		}
+
+		// used uniq route to avoid route conflict
+		[Route( "api/values/authors" )]
+		public IEnumerable<string> GetAuthors() {
+			return db.Books.Select( b => b.Author ).Distinct();
+		}
+
+		// use template value in the custom route!
+		[Route( "api/values/{id}/author" )]
+		public string GetAuthor( int id ) {
+			Book b = db.Books.Find( id );
+			if( b != null )
+				return b.Author;
+			return "";
+		}
+
+		// default value and specified type
+		[Route( "{id:int}/{name=volga}" )]
+		public string Test( int id, string name ) {
+			return id.ToString() + ". " + name;
 		}
 
 		[HttpGet]

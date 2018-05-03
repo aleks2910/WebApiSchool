@@ -8,11 +8,16 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using WebApiSchool.Filters;
 using WebApiSchool.Models;
+
 
 namespace WebApiSchool.Controllers
 {
-    public class BooksController : ApiController
+	[CustomAuthenticationAttribute] // Enable Basic authentication for this controller.
+	//[Authorize(Users = "user1", Roles = "user" )] // Require authenticated requests.
+	[CustomAuthorizationAttribute( "user1", "admin" )]
+	public class BooksController : ApiController
     {
         private BookContext db = new BookContext();
 
